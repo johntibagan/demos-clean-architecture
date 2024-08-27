@@ -17,13 +17,13 @@ public class MetricsReporterTest {
     private Message message;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         LoggingMeterRegistry loggingMeterRegistry = LoggingMeterRegistry
-            .builder(LoggingRegistryConfig.DEFAULT)
-            .build();
+                .builder(LoggingRegistryConfig.DEFAULT)
+                .build();
 
         metricsReporter = new MetricsReporter(loggingMeterRegistry);
-        metricsReporter.reportMetric("type","path",10L,true);
+        metricsReporter.reportMetric("type", "path", 10L, true);
 
         error = new IllegalArgumentException("Error");
 
@@ -45,8 +45,8 @@ public class MetricsReporterTest {
         Command<String> command = new Command<>("name", "commandID", "data");
 
         StepVerifier
-            .create(metricsReporter.reportError(error, message, command, true))
-            .verifyComplete();
+                .create(metricsReporter.reportError(error, message, command, true))
+                .verifyComplete();
     }
 
     @Test
@@ -54,8 +54,8 @@ public class MetricsReporterTest {
         DomainEvent<String> domainEvent = new DomainEvent<>("name", "eventID", "data");
 
         StepVerifier
-            .create(metricsReporter.reportError(error, message, domainEvent, true))
-            .verifyComplete();
+                .create(metricsReporter.reportError(error, message, domainEvent, true))
+                .verifyComplete();
     }
 
     @Test
@@ -63,7 +63,7 @@ public class MetricsReporterTest {
         AsyncQuery<String> asyncQuery = new AsyncQuery<>("resource", "data");
 
         StepVerifier
-            .create(metricsReporter.reportError(error, message, asyncQuery, true))
-            .verifyComplete();
+                .create(metricsReporter.reportError(error, message, asyncQuery, true))
+                .verifyComplete();
     }
 }

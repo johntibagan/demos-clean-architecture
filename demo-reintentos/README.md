@@ -1,4 +1,5 @@
 # Proyecto Base Implementando Clean Architecture
+
 ## Adecuar ambiente
 
 1. Levantar un contenedor de rabbitMQ mediante podman o docker:
@@ -6,19 +7,29 @@
 ```bash
 podman run -p 15672:15672 -p 5672:5672 -dt rabbitmq:3-management
 ```
+
 2. Abrir el proyecto en un IDE, recomendado: [IntelliJ IDEA](https://www.jetbrains.com/idea/download/?section=windows)
 
 3. Para emitir el evento mediante API REST invocar la URL http://localhost:8080/api/save con el método POST:
+
 ```bash
     #por la terminal
     curl --request POST --url http://localhost:8080/api/save
 ```
 
+### Pruebas unitarias
+```bash
+    #run
+    gradle clean build jacocoMergedReport
+```
+
 ## Antes de Iniciar
 
-Empezaremos por explicar los diferentes componentes del proyectos y partiremos de los componentes externos, continuando con los componentes core de negocio (dominio) y por último el inicio y configuración de la aplicación.
+Empezaremos por explicar los diferentes componentes del proyectos y partiremos de los componentes externos, continuando
+con los componentes core de negocio (dominio) y por último el inicio y configuración de la aplicación.
 
-Lee el artículo [Clean Architecture — Aislando los detalles](https://medium.com/bancolombia-tech/clean-architecture-aislando-los-detalles-4f9530f35d7a)
+Lee el
+artículo [Clean Architecture — Aislando los detalles](https://medium.com/bancolombia-tech/clean-architecture-aislando-los-detalles-4f9530f35d7a)
 
 # Arquitectura
 
@@ -26,11 +37,14 @@ Lee el artículo [Clean Architecture — Aislando los detalles](https://medium.c
 
 ## Domain
 
-Es el módulo más interno de la arquitectura, pertenece a la capa del dominio y encapsula la lógica y reglas del negocio mediante modelos y entidades del dominio.
+Es el módulo más interno de la arquitectura, pertenece a la capa del dominio y encapsula la lógica y reglas del negocio
+mediante modelos y entidades del dominio.
 
 ## Usecases
 
-Este módulo gradle perteneciente a la capa del dominio, implementa los casos de uso del sistema, define lógica de aplicación y reacciona a las invocaciones desde el módulo de entry points, orquestando los flujos hacia el módulo de entities.
+Este módulo gradle perteneciente a la capa del dominio, implementa los casos de uso del sistema, define lógica de
+aplicación y reacciona a las invocaciones desde el módulo de entry points, orquestando los flujos hacia el módulo de
+entities.
 
 ## Infrastructure
 
@@ -40,7 +54,8 @@ En el apartado de helpers tendremos utilidades generales para los Driven Adapter
 
 Estas utilidades no están arraigadas a objetos concretos, se realiza el uso de generics para modelar comportamientos
 genéricos de los diferentes objetos de persistencia que puedan existir, este tipo de implementaciones se realizan
-basadas en el patrón de diseño [Unit of Work y Repository](https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006)
+basadas en el patrón de
+diseño [Unit of Work y Repository](https://medium.com/@krzychukosobudzki/repository-design-pattern-bc490b256006)
 
 Estas clases no puede existir solas y debe heredarse su compartimiento en los **Driven Adapters**
 
@@ -56,6 +71,9 @@ Los entry points representan los puntos de entrada de la aplicación o el inicio
 
 ## Application
 
-Este módulo es el más externo de la arquitectura, es el encargado de ensamblar los distintos módulos, resolver las dependencias y crear los beans de los casos de use (UseCases) de forma automática, inyectando en éstos instancias concretas de las dependencias declaradas. Además inicia la aplicación (es el único módulo del proyecto donde encontraremos la función “public static void main(String[] args)”.
+Este módulo es el más externo de la arquitectura, es el encargado de ensamblar los distintos módulos, resolver las
+dependencias y crear los beans de los casos de use (UseCases) de forma automática, inyectando en éstos instancias
+concretas de las dependencias declaradas. Además inicia la aplicación (es el único módulo del proyecto donde
+encontraremos la función “public static void main(String[] args)”.
 
 **Los beans de los casos de uso se disponibilizan automaticamente gracias a un '@ComponentScan' ubicado en esta capa.**

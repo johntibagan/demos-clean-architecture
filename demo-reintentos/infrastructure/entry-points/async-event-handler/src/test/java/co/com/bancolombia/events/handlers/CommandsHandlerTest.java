@@ -1,27 +1,39 @@
 package co.com.bancolombia.events.handlers;
 
-import org.junit.jupiter.api.BeforeEach;
+import co.com.bancolombia.model.notification.Notification;
+import co.com.bancolombia.usecase.notification.NotificationUseCase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.api.domain.Command;
+import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
-
 
 import java.util.UUID;
 
-public class CommandsHandlerTest {
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
+class CommandsHandlerTest {
+
+    @Mock
+    NotificationUseCase notificationUseCase;
+    @InjectMocks
     CommandsHandler commandsHandler;
 
-    @BeforeEach
-    void setUp() {
-        commandsHandler = new CommandsHandler();
-    }
+    @Test
+    void handleCommandATest() {
 
-     @Test
-        void handleCommandATest(){
-            StepVerifier.create(commandsHandler.handleCommandA(
-                new Command<>("COMMAND",
-                    UUID.randomUUID().toString(),
-                        "Data"))).expectComplete();
-        }
+        when(notificationUseCase.send(any())).thenReturn(Mono.error(new Throwable("Error")));
+
+        StepVerifier.create(commandsHandler.handler(
+                        new Command<>("COMMAND",
+                                UUID.randomUUID().toString(),
+                                Notification.builder().build())))
+                .expectErrorMatches(e -> e.getMessage().equals("Error"))
+                .verify();
+    }
 }

@@ -1,34 +1,28 @@
 package co.com.bancolombia.events.handlers;
 
 import co.com.bancolombia.model.notification.Notification;
-import co.com.bancolombia.usecase.notification.NotificationUseCase;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.reactivecommons.api.domain.DomainEvent;
 import reactor.test.StepVerifier;
 
 import java.util.UUID;
 
-public class EventsHandlerTest {
+@ExtendWith(MockitoExtension.class)
+class EventsHandlerTest {
 
-    @Mock
-    NotificationUseCase notificationUseCase;
-
+    @InjectMocks
     EventsHandler eventsHandler;
-
-    @BeforeEach
-    void setUp() {
-        eventsHandler = new EventsHandler(notificationUseCase);
-    }
 
     @Test
     void handlerTest() {
-//        StepVerifier.create(eventsHandler.handleEventA(
-//                new DomainEvent<>("EVENT",
-//                        UUID.randomUUID().toString(),
-//                        Notification.builder().build()))).expectComplete();
+        StepVerifier.create(eventsHandler.retry(
+                        new DomainEvent<>("EVENT",
+                                UUID.randomUUID().toString(),
+                                Notification.builder().build())))
+                .expectComplete();
 
     }
-
 }

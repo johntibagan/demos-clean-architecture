@@ -2,7 +2,6 @@ package co.com.bancolombia.api;
 
 import co.com.bancolombia.usecase.notification.NotificationUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
